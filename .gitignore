@@ -14,7 +14,6 @@ data/raw/
 
 # Large output files
 *.png
-*.html
 *.pdf
 
 # Temporary files
