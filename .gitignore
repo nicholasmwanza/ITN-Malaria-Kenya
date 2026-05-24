@@ -24,3 +24,8 @@ data/raw/
 # OS junk
 .DS_Store
 Thumbs.db
+# Essay and testing folders (keep local only)
+Essay-Testing/
+EssayTemplate_17-03-2026/
+Nicholas_Description/
+Presentation testing/
