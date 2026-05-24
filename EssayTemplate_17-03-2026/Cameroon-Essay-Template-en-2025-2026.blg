@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2022/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Cameroon-Essay-Template-en-2025-2026.aux
+The style file: plain.bst
+Database file #1: template-bibliography.bib
+Warning--I didn't find a database entry for "ross1898"
+Warning--I didn't find a database entry for "grassi1900"
+Warning--I didn't find a database entry for "austin2010optimal"
+Warning--there's a number but no volume in lengeler2004insecticide
+Warning--there's a number but no volume in pryce2018insecticide
+You've used 26 entries,
+            2118 wiz_defined-function locations,
+            673 strings with 9528 characters,
+and the built_in function-call counts, 9098 in all, are:
+= -- 864
+> -- 553
+< -- 2
++ -- 225
+- -- 192
+* -- 714
+:= -- 1596
+add.period$ -- 79
+call.type$ -- 26
+change.case$ -- 174
+chr.to.int$ -- 0
+cite$ -- 28
+duplicate$ -- 281
+empty$ -- 612
+format.name$ -- 192
+if$ -- 1808
+int.to.chr$ -- 0
+int.to.str$ -- 26
+missing$ -- 23
+newline$ -- 134
+num.names$ -- 52
+pop$ -- 147
+preamble$ -- 1
+purify$ -- 147
+quote$ -- 0
+skip$ -- 199
+stack$ -- 0
+substring$ -- 483
+swap$ -- 36
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 102
+warning$ -- 2
+while$ -- 82
+width$ -- 28
+write$ -- 288
+(There were 5 warnings)

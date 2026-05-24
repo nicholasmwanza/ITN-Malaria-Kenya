@@ -1,0 +1,75 @@
+\chapter{Discussion}
+
+\section{Interpretation of Findings}
+
+Our study demonstrates that ITN use has a protective causal effect on malaria infection among children under five in Kenya. The magnitude depends on the estimand: cluster-specific (conditional) effects show a 45-55\% reduction in malaria odds, while population-average (marginal) effects show a 2-4\% reduction.
+
+The substantial difference between conditional and marginal effects is explained by the high intra-cluster correlation (ICC = 41-47\%). As \citet{neuhaus1991comparison} demonstrate, when ICC is high, conditional effects are typically larger in magnitude than marginal effects. This reflects non-collapsibility rather than bias \citep{greenland1999confounding}.
+
+\section{Comparison with Existing Literature}
+
+Our GLMM-based estimates (45-55\% reduction) exceed the pooled estimates from the Cochrane review \citep{pryce2018insecticide}, which found a 17\% reduction in child mortality and parasitemia. This is expected because Cochrane reports marginal effects, while our GLMM estimates conditional effects.
+
+Our DML estimates (2-4\% reduction) are more conservative but consistent with \citet{lim2011net}, who found a 20\% reduction using matching methods, and \citet{bhatt2015effect}, who estimated a 20-30\% reduction attributable to ITNs.
+
+\section{Interpretation of Heterogeneous Effects}
+
+\subsection{Wealth Gradient}
+
+ITNs are most effective for the ``Poorer'' wealth quintile (OR = 0.928) but not for the poorest. This suggests the poorest households face additional barriers: poor housing quality, overcrowded sleeping conditions, or older, less effective nets due to inability to replace them.
+
+\subsection{Age Gradient}
+
+Older children (36-59 months) show the strongest protective effect (OR = 0.957). Younger children may kick off nets during sleep, while older children use nets more consistently.
+
+\subsection{Rainfall and Urban-Rural Gradients}
+
+ITNs are most effective in high-rainfall areas (OR = 0.945) where transmission intensity is highest, and in urban areas (OR = 0.974), which may reflect better housing quality and net access.
+
+\section{Implications for Malaria Prevention Strategies}
+
+\subsection{Continued Investment in ITN Distribution}
+
+The consistent protective effect across multiple methods supports continued investment in ITN distribution programs, despite the decline in ITN use from 58.0\% (2015) to 50.5\% (2020).
+
+\subsection{Targeted Distribution Strategies}
+
+Priority should be given to poorer households (not the very poorest), high-rainfall areas, older children (36-59 months), and urban areas.
+
+\subsection{Complementary Interventions for the Poorest}
+
+The lack of significant effect in the poorest quintile suggests ITNs alone are insufficient. Complementary interventions such as improved housing (closing eaves, screening windows) or indoor residual spraying may be needed.
+
+\subsection{Behavior Change Communication}
+
+The decline in ITN use despite continued distribution suggests distribution alone is insufficient; behavior change communication is needed.
+
+\section{Limitations}
+
+\subsection{Unobserved Confounding}
+
+Despite a comprehensive set of covariates, unmeasured confounders (genetic resistance, health-seeking behavior) may still bias estimates.
+
+\subsection{Measurement Error}
+
+ITN use is self-reported and subject to recall bias. Malaria testing using RDTs has known sensitivity and specificity limitations.
+
+\subsection{Cross-Sectional Design}
+
+The cross-sectional nature means temporal ordering cannot be fully established.
+
+\subsection{Positivity Assumption}
+
+Following \citet{westreich2010invited}, we assessed positivity using overlap plots. While substantial overlap was observed, near-violations in sparse regions cannot be ruled out.
+
+\subsection{DML Variance Estimation}
+
+\citet{wu2025why} prove that influence-function-based variance estimators for doubly robust estimators are not doubly robust. Future work should employ joint inference or bootstrap procedures.
+
+\subsection{Generalizability}
+
+Findings are specific to Kenya and may not generalize to other countries with different transmission intensities.
+
+\section{Strengths of the Study}
+
+Key strengths include: (1) triangulation across six causal methods, (2) explicit accounting for clustering with ICC = 41-47\% \citep{killip2004intracluster}, (3) GLMM for propensity scores following \citet{ayele2024assessment}, (4) clear distinction between conditional and marginal effects, (5) integration of high-resolution environmental data, (6) comprehensive robustness checks, and (7) subgroup analysis for targeted interventions.

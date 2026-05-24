@@ -1,0 +1,161 @@
+\begin{thebibliography}{10}
+
+\bibitem{austin2011introduction}
+Peter~C Austin.
+\newblock An introduction to propensity score methods for reducing the effects
+  of confounding in observational studies.
+\newblock {\em Multivariate behavioral research}, 46(3):399--424, 2011.
+
+\bibitem{ayele2024assessment}
+Dawit~G Ayele, Mohammed Omar~Musa Mohammed, Ahmed Saied~Rahama Abdallah, and
+  Gemechis~A Wacho.
+\newblock Assessment of malaria transmission in kenya using multilevel logistic
+  regression.
+\newblock {\em Heliyon}, 10(21), 2024.
+
+\bibitem{bhatt2015effect}
+Samir Bhatt, Daniel~J Weiss, Ewan Cameron, Donal Bisanzio, Bonnie Mappin,
+  Ursula Dalrymple, KE~Battle, Catherine~L Moyes, Amelia Henry, Philip~A
+  Eckhoff, et~al.
+\newblock The effect of malaria control on plasmodium falciparum in africa
+  between 2000 and 2015.
+\newblock {\em Nature}, 526(7572):207--211, 2015.
+
+\bibitem{chernozhukov2018double}
+Victor Chernozhukov, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian
+  Hansen, Whitney Newey, and James Robins.
+\newblock Double/debiased machine learning for treatment and structural
+  parameters, 2018.
+
+\bibitem{chung2023evalue}
+William~T Chung and Kevin~C Chung.
+\newblock The use of the e-value for sensitivity analysis.
+\newblock {\em Journal of Clinical Epidemiology}, 163:92--94, 2023.
+\newblock Key Concepts in Clinical Epidemiology.
+
+\bibitem{cole2008constructing}
+Stephen~R Cole and Miguel~A Hern{\'a}n.
+\newblock Constructing inverse probability weights for marginal structural
+  models.
+\newblock {\em American journal of epidemiology}, 168(6):656--664, 2008.
+
+\bibitem{greenland1999confounding}
+Sander Greenland, Judea Pearl, and James~M Robins.
+\newblock Confounding and collapsibility in causal inference.
+\newblock {\em Statistical science}, 14(1):29--46, 1999.
+
+\bibitem{hawley2003community}
+William~A Hawley, Penelope~A Phillips-Howard, Feiko~O ter Kuile, Dianne~J
+  Terlouw, John~M Vulule, Maurice Ombok, Bernard~L Nahlen, John~E Gimnig,
+  Simon~K Kariuki, Margarette~S Kolczak, and Allen~W Hightower.
+\newblock Community-wide effects of permethrin-treated bed nets on child
+  mortality and malaria morbidity in western kenya.
+\newblock {\em The American Journal of Tropical Medicine and Hygiene},
+  68(4\_suppl):121--127, 2003.
+
+\bibitem{dhsgeocov}
+{ICF}.
+\newblock The dhs program geospatial covariate datasets.
+\newblock \url{https://dhsprogram.com/data/geospatial-covariates.cfm}, 2023.
+\newblock Accessed: 2026.
+
+\bibitem{killip2004intracluster}
+Shersten Killip, Ziyad Mahfoud, and Kevin Pearce.
+\newblock What is an intracluster correlation coefficient? crucial concepts for
+  primary care researchers.
+\newblock {\em The Annals of Family Medicine}, 2(3):204--208, 2004.
+
+\bibitem{lengeler2004insecticide}
+Christian Lengeler.
+\newblock Insecticide-treated bed nets and curtains for preventing malaria.
+\newblock {\em Cochrane database of systematic reviews}, (2), 2004.
+
+\bibitem{lim2011net}
+Stephen~S Lim, Nancy Fullman, Andrew Stokes, Nirmala Ravishankar, Felix Masiye,
+  Christopher~JL Murray, and Emmanuela Gakidou.
+\newblock Net benefits: a multicountry analysis of observational data examining
+  associations between insecticide-treated mosquito nets and health outcomes.
+\newblock {\em PLoS medicine}, 8(9):e1001091, 2011.
+
+\bibitem{little2019statistical}
+Roderick~JA Little and Donald~B Rubin.
+\newblock {\em Statistical analysis with missing data}.
+\newblock John Wiley \& Sons, 2019.
+
+\bibitem{kmis2015report}
+{National Malaria Control Programme (NMCP)}, {Kenya National Bureau of
+  Statistics (KNBS)}, and {ICF}.
+\newblock Kenya malaria indicator survey 2015: Final report.
+\newblock Technical report, NMCP, KNBS, and ICF, Nairobi, Kenya, 2016.
+
+\bibitem{kmis2020report}
+{National Malaria Control Programme (NMCP)}, {Kenya National Bureau of
+  Statistics (KNBS)}, and {ICF}.
+\newblock Kenya malaria indicator survey 2020: Final report.
+\newblock Technical report, NMCP, KNBS, and ICF, Nairobi, Kenya, 2021.
+
+\bibitem{neuhaus1991comparison}
+John~M Neuhaus, John~D Kalbfleisch, and Walter~W Hauck.
+\newblock A comparison of cluster-specific and population-averaged approaches
+  for analyzing correlated binary data.
+\newblock {\em International Statistical Review/Revue Internationale de
+  Statistique}, pages 25--35, 1991.
+
+\bibitem{nie2021quasi}
+Xinkun Nie and Stefan Wager.
+\newblock Quasi-oracle estimation of heterogeneous treatment effects.
+\newblock {\em Biometrika}, 108(2):299--319, 2021.
+
+\bibitem{noor2009risks}
+Abdisalan~M Noor, Peter~W Gething, Victor~A Alegana, Anand~P Patil, Simon~I
+  Hay, Eric Muchiri, Elizabeth Juma, and Robert~W Snow.
+\newblock The risks of malaria infection in kenya in 2009.
+\newblock {\em BMC infectious diseases}, 9(1):180, 2009.
+
+\bibitem{pryce2018insecticide}
+Joseph Pryce, Marty Richardson, and Christian Lengeler.
+\newblock Insecticide-treated nets for preventing malaria.
+\newblock {\em Cochrane Database of Systematic Reviews}, (11), 2018.
+
+\bibitem{rosenbaum1983central}
+Paul~R Rosenbaum and Donald~B Rubin.
+\newblock The central role of the propensity score in observational studies for
+  causal effects.
+\newblock {\em Biometrika}, 70(1):41--55, 1983.
+
+\bibitem{rubin1974estimating}
+Donald~B Rubin.
+\newblock Estimating causal effects of treatments in randomized and
+  nonrandomized studies.
+\newblock {\em Journal of educational Psychology}, 66(5):688, 1974.
+
+\bibitem{schafer2008average}
+Joseph~L Schafer and Joseph Kang.
+\newblock Average causal effects from nonrandomized studies: a practical guide
+  and simulated example.
+\newblock {\em Psychological methods}, 13(4):279, 2008.
+
+\bibitem{vanderweele2017sensitivity}
+Tyler~J VanderWeele and Peng Ding.
+\newblock Sensitivity analysis in observational research: introducing the
+  e-value.
+\newblock {\em Annals of Internal Medicine}, 167(4):268--274, 2017.
+
+\bibitem{westreich2010invited}
+Daniel Westreich and Stephen~R Cole.
+\newblock Invited commentary: positivity in practice.
+\newblock {\em American journal of epidemiology}, 171(6):674--677, 2010.
+
+\bibitem{who2023malaria}
+{World Health Organization}.
+\newblock World malaria report 2023.
+\newblock {\em World Health Organization}, pages 1--324, 2023.
+
+\bibitem{wu2025double}
+Hao Wu, Lucy Shao, Toni Gui, Tsungchin Wu, Zhuochao Huang, Shengjia Tu, Xin Tu,
+  Jinyuan Liu, and Tuo Lin.
+\newblock Why is the double-robust estimator for causal inference not doubly
+  robust for variance estimation?
+\newblock {\em arXiv preprint arXiv:2511.17907}, 2025.
+
+\end{thebibliography}

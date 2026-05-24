@@ -1,0 +1,259 @@
+---
+title: "Week 5: Double Machine Learning"
+author: "Nicholas Mwanza"
+date: "April 2026"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 6)
+```
+
+```{r}
+rm(list = ls())
+setwd("/home/student25/Documents/Projects/Essay/Scripts/")
+
+library(dplyr)
+library(tidyr)
+library(data.table)
+library(ggplot2)
+library(DoubleML)
+library(mlr3)
+library(mlr3learners)
+library(ranger)
+library(xgboost)
+
+output_dir <- "/home/student25/Documents/Projects/Essay/Figures/"
+data_dir <- "/home/student25/Documents/Projects/Essay/Cleaned/"
+if(!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+if(!dir.exists(data_dir)) dir.create(data_dir, recursive = TRUE)
+```
+
+```{r}
+analytical_2015 <- readRDS("/home/student25/Documents/Projects/Essay/Cleaned/analytical_2015.rds")
+analytical_2020 <- readRDS("/home/student25/Documents/Projects/Essay/Cleaned/analytical_2020.rds")
+analytical_combined <- readRDS("/home/student25/Documents/Projects/Essay/Cleaned/analytical_combined.rds")
+
+cat("KMIS 2015:", nrow(analytical_2015), "children\n")
+cat("KMIS 2020:", nrow(analytical_2020), "children\n")
+cat("Combined:", nrow(analytical_combined), "children\n")
+```
+
+```{r}
+prepare_dml_data <- function(data, survey_name) {
+  dml_data <- data %>%
+    mutate(
+      malaria_num = as.numeric(malaria),
+      itn_use_num = as.numeric(itn_use),
+      wealth_num = as.numeric(wealth),
+      sex_num = ifelse(sex == "Male", 0, 1),
+      residence_num = ifelse(residence == "Urban", 0, 1)
+    ) %>%
+    select(
+      malaria_num, itn_use_num, cluster,
+      age_months, sex_num, wealth_num, residence_num,
+      rainfall, temp_mean, evi, aridity, wet_days, population
+    ) %>%
+    filter(complete.cases(.))
+  
+  cat(survey_name, ": ", nrow(data), " -> ", nrow(dml_data), " complete cases\n")
+  return(dml_data)
+}
+
+dml_data_2015 <- prepare_dml_data(analytical_2015, "KMIS 2015")
+dml_data_2020 <- prepare_dml_data(analytical_2020, "KMIS 2020")
+dml_data_combined <- prepare_dml_data(analytical_combined, "Combined")
+
+dml_data_combined_rf <- dml_data_combined %>%
+  mutate(cluster_fe = as.factor(cluster)) %>%
+  select(-cluster)
+
+dml_data_2015_rf <- dml_data_2015 %>%
+  mutate(cluster_fe = as.factor(cluster)) %>%
+  select(-cluster)
+
+dml_data_2020_rf <- dml_data_2020 %>%
+  mutate(cluster_fe = as.factor(cluster)) %>%
+  select(-cluster)
+
+dml_data_combined_xgb <- dml_data_combined %>%
+  select(-cluster)
+
+dml_dt_2015_rf <- as.data.table(dml_data_2015_rf)
+dml_dt_2020_rf <- as.data.table(dml_data_2020_rf)
+dml_dt_combined_rf <- as.data.table(dml_data_combined_rf)
+dml_dt_combined_xgb <- as.data.table(dml_data_combined_xgb)
+
+covariates_rf <- c("age_months", "sex_num", "wealth_num", "residence_num",
+                   "rainfall", "temp_mean", "evi", "aridity", "wet_days", "population",
+                   "cluster_fe")
+
+covariates_xgb <- c("age_months", "sex_num", "wealth_num", "residence_num",
+                    "rainfall", "temp_mean", "evi", "aridity", "wet_days", "population")
+
+cat("RF covariates (with cluster):", length(covariates_rf), "\n")
+cat("XGB covariates:", length(covariates_xgb), "\n")
+```
+
+```{r}
+ml_g_rf <- lrn("regr.ranger", num.trees = 500, min.node.size = 10)
+ml_m_rf <- lrn("classif.ranger", num.trees = 500, min.node.size = 10, predict_type = "prob")
+
+ml_g_xgb <- lrn("regr.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, subsample = 0.8)
+ml_m_xgb <- lrn("classif.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, 
+                subsample = 0.8, predict_type = "prob")
+```
+
+```{r}
+compute_evalue <- function(ate, ci_lower, ci_upper, baseline_risk = 0.048) {
+  rr <- (baseline_risk + ate) / baseline_risk
+  
+  if(rr < 1) {
+    rr_inv <- 1 / rr
+    evalue_point <- rr_inv + sqrt(rr_inv * (rr_inv - 1))
+    
+    rr_upper <- (baseline_risk + ci_upper) / baseline_risk
+    if(rr_upper < 1) {
+      rr_upper_inv <- 1 / rr_upper
+      evalue_ci <- rr_upper_inv + sqrt(rr_upper_inv * (rr_upper_inv - 1))
+    } else {
+      evalue_ci <- 1
+    }
+  } else {
+    evalue_point <- rr + sqrt(rr * (rr - 1))
+    rr_lower <- (baseline_risk + ci_lower) / baseline_risk
+    if(rr_lower > 1) {
+      evalue_ci <- rr_lower + sqrt(rr_lower * (rr_lower - 1))
+    } else {
+      evalue_ci <- 1
+    }
+  }
+  
+  return(list(point = evalue_point, ci = evalue_ci))
+}
+```
+
+```{r}
+run_dml <- function(data, ml_g, ml_m, n_folds, survey_name, method_name) {
+  cat("\n---", survey_name, "|", method_name, "| folds =", n_folds, "---\n")
+  
+  dml_data <- double_ml_data_from_data_frame(
+    df = data,
+    y_col = "malaria_num",
+    d_cols = "itn_use_num",
+    x_cols = setdiff(names(data), c("malaria_num", "itn_use_num"))
+  )
+  
+  dml_irm <- DoubleMLIRM$new(
+    data = dml_data,
+    ml_g = ml_g,
+    ml_m = ml_m,
+    n_folds = n_folds,
+    score = "ATE"
+  )
+  
+  dml_irm$fit()
+  
+  ate <- dml_irm$coef
+  se <- dml_irm$se
+  pval <- dml_irm$pval
+  ci_lower <- ate - 1.96 * se
+  ci_upper <- ate + 1.96 * se
+  
+  evalue <- compute_evalue(ate, ci_lower, ci_upper, baseline_risk = 0.048)
+  
+  cat("  ATE (risk diff):", round(ate, 4), "\n")
+  cat("  95% CI:", round(ci_lower, 4), "-", round(ci_upper, 4), "\n")
+  cat("  P-value:", round(pval, 4), "\n")
+  cat("  E-value (point):", round(evalue$point, 2), "CI bound:", round(evalue$ci, 2), "\n")
+  cat("  Interpretation: ITN reduces malaria risk by", round(abs(ate) * 100, 1), 
+      "percentage points\n")
+  
+  return(data.frame(
+    Survey = survey_name,
+    Method = method_name,
+    N_Folds = n_folds,
+    ATE = ate,
+    SE = se,
+    CI_Lower = ci_lower,
+    CI_Upper = ci_upper,
+    P_Value = pval,
+    Evalue_Point = evalue$point,
+    Evalue_CI = evalue$ci
+  ))
+}
+```
+
+```{r}
+res_rf_5 <- run_dml(dml_dt_combined_rf, ml_g_rf, ml_m_rf, 5, "Combined", "Random Forest (w/ cluster)")
+res_rf_10 <- run_dml(dml_dt_combined_rf, ml_g_rf, ml_m_rf, 10, "Combined", "Random Forest (w/ cluster, 10f)")
+```
+
+```{r}
+res_xgb_5 <- run_dml(dml_dt_combined_xgb, ml_g_xgb, ml_m_xgb, 5, "Combined", "XGBoost")
+res_xgb_10 <- run_dml(dml_dt_combined_xgb, ml_g_xgb, ml_m_xgb, 10, "Combined", "XGBoost (10f)")
+```
+
+```{r}
+res_2015_rf <- run_dml(dml_dt_2015_rf, ml_g_rf, ml_m_rf, 10, "KMIS 2015", "Random Forest (w/ cluster, 10f)")
+res_2020_rf <- run_dml(dml_dt_2020_rf, ml_g_rf, ml_m_rf, 10, "KMIS 2020", "Random Forest (w/ cluster, 10f)")
+```
+
+```{r}
+all_results <- bind_rows(res_rf_5, res_rf_10, res_xgb_5, res_xgb_10, res_2015_rf, res_2020_rf)
+
+cat("\n=== DML Results Summary ===\n")
+for(i in 1:nrow(all_results)) {
+  cat(sprintf("%-35s | ATE = %+.4f (%.4f-%.4f) | p = %.4f | E-val = %.2f\n",
+              all_results$Method[i],
+              all_results$ATE[i],
+              all_results$CI_Lower[i],
+              all_results$CI_Upper[i],
+              all_results$P_Value[i],
+              all_results$Evalue_Point[i]))
+}
+```
+
+```{r}
+forest_data <- all_results %>%
+  filter(Survey == "Combined") %>%
+  mutate(Method = factor(Method, levels = rev(Method)))
+
+p_forest <- ggplot(forest_data, aes(x = ATE, y = Method)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50", linewidth = 1) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.2, color = "steelblue", linewidth = 0.8) +
+  labs(title = "Double ML: Effect of ITN Use on Malaria (ATE = Risk Difference)",
+       x = "Average Treatment Effect (Risk Difference)", y = "") +
+  theme_minimal()
+
+print(p_forest)
+ggsave(paste0(output_dir, "week5_dml_forest_ate.png"), p_forest, width = 10, height = 6, dpi = 300)
+```
+
+```{r}
+evalue_data <- all_results %>%
+  filter(Survey == "Combined") %>%
+  mutate(Method = factor(Method, levels = rev(Method)))
+
+p_evalue <- ggplot(evalue_data, aes(x = Method, y = Evalue_Point, fill = Method)) +
+  geom_bar(stat = "identity", alpha = 0.7, show.legend = FALSE) +
+  geom_errorbar(aes(ymin = Evalue_CI, ymax = Evalue_Point), width = 0.2) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  coord_flip() +
+  labs(title = "Sensitivity Analysis: E-values",
+       x = "", y = "E-value") +
+  theme_minimal()
+
+print(p_evalue)
+ggsave(paste0(output_dir, "week5_evalue_plot.png"), p_evalue, width = 10, height = 5, dpi = 300)
+```
+
+```{r}
+saveRDS(all_results, paste0(data_dir, "week5_dml_final_results.rds"))
+write.csv(all_results, paste0(data_dir, "week5_dml_final_results.csv"), row.names = FALSE)
+saveRDS(dml_dt_combined_rf, paste0(data_dir, "dml_data_combined_rf.rds"))
+saveRDS(dml_dt_combined_xgb, paste0(data_dir, "dml_data_combined_xgb.rds"))
+
+cat("\nWeek 5 complete.\n")
+```

@@ -1,0 +1,26 @@
+# R specific
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Rprofile
+*.Rproj
+
+# Data files - DO NOT UPLOAD RAW DATA
+data/raw/
+*.dta
+*.rds
+*.csv
+
+# Large output files
+*.png
+*.html
+*.pdf
+
+# Temporary files
+*.tmp
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db

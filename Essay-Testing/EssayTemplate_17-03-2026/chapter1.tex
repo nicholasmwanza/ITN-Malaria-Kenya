@@ -1,0 +1,55 @@
+\chapter{Introduction}
+
+\section{Background}
+
+Malaria remains one of the most pressing public health challenges in sub-Saharan Africa. According to the World Health Organization \citep{who2023malaria}, there were an estimated 249 million malaria cases and 608,000 malaria deaths worldwide in 2022. The African region bears the heaviest burden, accounting for approximately 94\% of all malaria cases and 95\% of all malaria deaths. Children under five years of age are particularly vulnerable, comprising nearly 80\% of all malaria deaths in the region.
+
+Kenya has a heterogeneous malaria transmission landscape. The western region near Lake Victoria experiences high perennial transmission, while the central highlands and northern arid areas have low or seasonal transmission \citep{noor2014risk}. Despite significant progress, malaria remains a leading cause of morbidity and mortality among Kenyan children under five.
+
+Insecticide-treated nets (ITNs) are among the most widely implemented malaria prevention interventions. ITNs create a physical barrier between humans and mosquitoes while also killing or repelling mosquitoes through insecticide. Large-scale distribution campaigns have increased ITN ownership across Africa, with the proportion of households owning at least one ITN increasing from 5\% in 2004 to 56\% in 2021 \citep{who2023malaria}.
+
+\section{The Empirical Challenge}
+
+While ITNs have been shown effective in randomized controlled trials \citep{lengeler2004insecticide}, estimating their causal effect using observational data presents significant challenges due to confounding. Individuals who use ITNs may differ systematically from those who do not in ways that also affect malaria risk.
+
+Key sources of confounding include socioeconomic status (wealthier households have better ITN access and lower malaria risk), environmental conditions (rainfall and temperature affect both mosquito breeding and ITN use decisions), and demographic factors (child age affects both ITN use patterns and malaria immunity). To obtain unbiased causal estimates, these confounders must be adequately controlled.
+
+\section{Research Gap}
+
+Despite extensive literature on ITNs and malaria, several important gaps remain. First, most existing studies report associations rather than causal effects. Second, many analyses ignore the hierarchical structure of survey data where children are nested within clusters. Preliminary analysis reveals an intra-cluster correlation (ICC) of 41-47\%, indicating that nearly half of the variation in malaria risk is between clusters---a fact most previous studies have overlooked. Third, existing research typically estimates a single type of effect without distinguishing between cluster-specific (conditional) and population-average (marginal) effects. As \citet{neuhaus1991comparison} demonstrate, when ICC is high, conditional effects are typically larger in magnitude than marginal effects, making this distinction essential for correct interpretation.
+
+This study addresses these gaps by: (1) applying rigorous causal methods instead of associational models, (2) explicitly accounting for clustering using Generalized Linear Mixed Models (GLMM) and cluster fixed effects, (3) estimating both cluster-specific and population-average effects, and (4) using flexible machine learning learners that capture non-linearities automatically.
+
+\section{Research Question}
+
+This study addresses the following research question:
+
+\begin{pro}
+	What is the causal effect of insecticide-treated net (ITN) use on malaria infection among children under five in Kenya?
+\end{pro}
+
+We estimate two types of causal effects. First, \textbf{cluster-specific (conditional) effects}: the effect within a typical cluster, holding cluster-level heterogeneity constant, estimated using GLMM and GLMM-based propensity score methods. Second, \textbf{population-average (marginal) effects}: the average effect across the entire population, estimated using Double Machine Learning (DML).
+
+Secondary questions include: (1) How do cluster-specific estimates compare with population-average estimates? (2) Does the impact vary across wealth, residence, age, and rainfall?
+
+\section{Motivation for Causal Machine Learning}
+
+Traditional causal inference methods rely on parametric models that assume linearity in the log-odds and may miss important non-linear relationships. Double Machine Learning \citep{chernozhukov2018double} combines machine learning algorithms with causal inference techniques, offering flexibility to capture non-linearities, handling high-dimensional confounding through regularization, providing double robustness, and ensuring valid inference via cross-fitting. In this study, we use DML2 (Definition 3.2 in \citealp{chernozhukov2018double}) with 5-fold and 10-fold cross-fitting.
+
+\section{Study Contributions}
+
+\subsection{Methodological Contributions}
+
+This study makes several methodological contributions: (1) explicit distinction between cluster-specific and population-average causal effects, demonstrating they differ substantially when ICC is high; (2) use of GLMM for propensity scores to account for hierarchical structure---following \citet{ayele2024assessment}, who demonstrated the importance of multilevel modeling for malaria outcomes in Kenya, we extend this approach to propensity score estimation; (3) incorporation of cluster fixed effects into DML; (4) triangulation of six causal methods; and (5) integration of high-resolution environmental data with survey data using a DAG-based approach.
+
+\subsection{Policy Contributions}
+
+The study provides rigorous causal evidence on ITN effectiveness, with cluster-specific effects showing 45-55\% reduction in malaria odds. Heterogeneity analysis identifies subgroups where ITNs are most effective (poorer wealth quintile, older children aged 36-59 months, high-rainfall areas), informing targeted distribution strategies. The decline in ITN use from 58.0\% (2015) to 50.5\% (2020) highlights the need for behavior change communication.
+
+\section{Thesis Structure}
+
+This thesis is organized as follows. Chapter 2 reviews the existing literature on ITN effectiveness and causal inference methods. Chapter 3 describes the methodology, including data sources, variables, causal framework, and statistical methods. Chapter 4 presents the empirical results. Chapter 5 discusses the findings in the context of existing literature and policy implications. Chapter 6 concludes with a summary of key findings, contributions, and future research directions.
+
+\section{Scope and Delimitations}
+
+This study focuses on children under five in Kenya using the 2015 and 2020 Kenya Malaria Indicator Surveys (KMIS). The 2014 and 2022 Demographic and Health Surveys (DHS) were excluded because they lack the malaria outcome variable (rapid diagnostic test results). The study uses complete case analysis, with missingness below 5\% for all covariates, following \citet{little2019statistical}. Causal interpretation relies on the conditional ignorability and positivity assumptions. Following \citet{westreich2010invited}, positivity requires that for every combination of observed confounders, there is a non-zero probability of both ITN use and non-use; we assess this empirically in Chapter 4. Unmeasured confounders may still bias estimates, and this limitation is addressed in Chapter 5.

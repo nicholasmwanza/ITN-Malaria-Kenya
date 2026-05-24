@@ -1,0 +1,28 @@
+\chapter*{Abstract}
+
+Malaria remains a leading cause of morbidity and mortality among children under five in sub-Saharan Africa. Insecticide-treated nets (ITNs) are a primary malaria prevention intervention, but estimating their effect using observational data is challenging due to confounding by environmental, socioeconomic, and demographic factors. This study addresses this challenge by applying six causal inference methods and triangulating evidence.
+
+We use data from the 2015 and 2020 Kenya Malaria Indicator Surveys (KMIS). The analytical sample comprises 6,544 children across 528 clusters after complete case analysis. Malaria prevalence is 4.8\% (326 positive cases), and ITN use rate is 54.1\%. The intra-cluster correlation (ICC) is 50-58\%, indicating that more than half of the variation in malaria risk is between clusters, strongly justifying multilevel modeling.
+
+We employ six methods: traditional logistic regression (three specifications), Generalized Linear Mixed Models (GLMM) with random intercepts, propensity score matching (PSM) with GLMM-based propensity scores and caliper = 0.05, inverse probability of treatment weighting (IPTW) with weight truncation at 4, doubly robust (DR) estimation, and Double Machine Learning (DML) with XGBoost as the primary learner. For DML, we implement cluster-aware cross-fitting to prevent information leakage. We also compute E-values for sensitivity analysis.
+
+Key results: Unadjusted models show no statistically significant association (p $>$ 0.05). After full adjustment, the combined sample shows OR = 0.777 (95$\%$ CI: 0.605-0.999, p = 0.049). GLMM produces OR = 0.557-0.588 (44-61$\%$ reduction, all p $<$ 0.05). PSM (caliper=0.05) gives OR = 0.392 (2015, 61\% reduction) and 0.466 (2020, 53$\%$ reduction). IPTW gives OR = 0.482 - 0.511 (48-52$\%$ reduction). Doubly robust gives near-null marginal effects (OR $\approx$ 0.99). DML (XGBoost, 5 folds) gives OR = 0.972 (95\% CI: 0.960 - 0.984, p $<$ 0.001), representing a 2.8\% reduction in malaria odds at the population level. The E-value is 3.05, meaning unmeasured confounding would need a risk ratio $>$ 3.0 to explain away the effect.
+
+Heterogeneity analysis shows strongest effects in the poorer wealth quintile (OR = 0.919, p = 0.001), urban areas (OR = 0.974, p = 0.003), older children aged 36-59 months (OR = 0.963, p $<$ 0.001), and medium to high-rainfall regions (OR = 0.950-0.967, p $<$ 0.05). The poorest quintile shows no significant effect (OR $\approx$ 1.00), suggesting additional barriers.
+
+Robustness checks across five alternative learners produce ORs between 0.968 and 0.980, all statistically significant, confirming stability.
+
+The study concludes that ITN use has a protective effect on malaria infection. The distinction between conditional effects (44-61\% reduction) and marginal effects (2.8\% reduction) highlights the importance of understanding which estimand is relevant for policy. A key limitation is that cross-sectional data cannot separate personal protection from community-level mosquito suppression, which randomized trials have shown requires coverage $>$ 50\% to generate detectable effects \citep{hawley2003community}.
+
+\textbf{Keywords}: Malaria, Insecticide-treated nets, Causal inference, Double Machine Learning, Propensity score matching, GLMM, E-value, Community effect, Kenya.
+
+\vfill
+\section*{Declaration}
+I, the undersigned, hereby declare that the work contained in this essay is my original work, and that any work done by others or by myself previously has been acknowledged and referenced accordingly.
+
+% Scan your signature into a small picture called 'signature.png' and insert it
+% above your name and the date:
+\includegraphics[height=4cm]{Figures/signature} \hrule
+% Your name must be in English Capitalisation with no comma, and the Family name comes last. 
+% Do note the date below. It is called the "deadline".
+Nicholas Mwanza, 30 May 2026.

@@ -1,0 +1,47 @@
+\contentsline {section}{\numberline {1}Introduction and Preliminaries}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Notation}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Logistic Regression: Complete Derivation}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The Bernoulli Distribution as an Exponential Family}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Linear Predictor and Link Function}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Log-Likelihood Function}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}First Derivative (Score Vector)}{3}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Scalar derivative for one observation}{3}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Summing over all observations}{3}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Matrix form}{4}{subsubsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.5}Second Derivative (Hessian Matrix)}{4}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Newton-Raphson Iteration}{4}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Iteratively Reweighted Least Squares (IRLS)}{4}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Asymptotic Variance and Inference}{5}{subsection.2.8}%
+\contentsline {section}{\numberline {3}Generalized Linear Mixed Models (GLMM)}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Model Specification with Random Intercepts}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Conditional vs. Marginal Interpretation}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Intraclass Correlation Coefficient (ICC)}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}The Full Likelihood}{5}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Laplace Approximation: Step-by-Step}{6}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}First derivative of $h_c(u)$}{6}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Second derivative}{6}{subsubsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.3}Laplace approximation to the marginal log-likelihood}{6}{subsubsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.6}Penalized Quasi-Likelihood (PQL) Algorithm}{6}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Propensity Score Methods}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Definition and Fundamental Theorem}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Proof of the Balancing Property}{7}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Propensity Score Estimation with GLMM for Clustering}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Propensity Score Matching (PSM)}{7}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Inverse Probability of Treatment Weighting (IPTW)}{8}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Variance of IPTW Estimator (Sketch)}{8}{subsubsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.6}Doubly Robust Estimation}{8}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Proof of Double Robustness}{8}{subsection.4.7}%
+\contentsline {section}{\numberline {5}Double Machine Learning (DML)}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Partially Linear Model (PLM)}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Identification of $\theta _0$}{9}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Neyman Orthogonality}{9}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Orthogonalized Residuals}{10}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Cross-Fitting Algorithm}{10}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Asymptotic Distribution}{10}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Variance Estimation}{10}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Cluster-Aware Cross-Fitting}{11}{subsection.5.8}%
+\contentsline {section}{\numberline {6}E-value for Sensitivity Analysis}{11}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Definition}{11}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Derivation}{11}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Interpretation}{12}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Conclusion}{12}{section.7}%

@@ -1,0 +1,216 @@
+\chapter{Discussion}
+
+This chapter interprets the empirical findings in the context of malaria control policy and the existing scientific literature.
+
+\section{Comparison with Existing Literature}
+
+Our findings align with randomized controlled trials (RCTs) of ITNs. The Cochrane review by \citet{pryce2018insecticide} found that ITNs reduce child mortality by 17\% (RR 0.83, 95\% CI 0.77-0.89) and \textit{P. falciparum} prevalence by 17\% (RR 0.83, 95\% CI 0.71-0.98). \citet{lim2011net} conducted a multicountry analysis using matching methods and found a pooled relative reduction in parasitemia prevalence of 20\% (95\% CI 3-35\%) associated with household ITN ownership. \citet{bhatt2015effect} estimated that ITNs contributed to a 20-30\% reduction in malaria prevalence in Africa between 2000 and 2015.
+
+Our GLMM-based conditional estimates (44-61\% reduction in odds) are at the upper end of this range. As noted by \citet{neuhaus1991comparison}, when intra-cluster correlation (ICC) is high (50-58\% in our data), cluster-specific (conditional) effects are typically larger in magnitude than population-average (marginal) effects. The Cochrane review reports marginal effects, which explains why our conditional estimates are larger.
+
+Our DML marginal estimates (2.8\% reduction in odds) are more conservative but still indicate a protective effect. This discrepancy reflects non-collapsibility rather than bias, as discussed by \citet{greenland1999confounding}. When ICC is high, conditioning on cluster-level heterogeneity reveals larger effects.
+
+\section{Community vs Personal Protection}
+
+A key insight from \citet{hawley2003community} is that ITNs protect not only users but also neighbours by suppressing mosquito populations. In the Asembo trial in western Kenya, children in control compounds within 300 meters of ITN compounds received about the same protection as children actually using nets. For mortality, the hazard ratio was 0.72 (95\% CI 0.60-0.86) for control compounds within 300 meters of ITN compounds.
+
+Importantly, this community effect only appeared when coverage exceeded 50\% of nearby compounds. Below 25\% coverage, no effect was observed. This threshold effect has profound implications: low-coverage programs may waste resources without achieving population impact.
+
+How does this relate to our DML estimate of 2.8\% reduction? The DML estimate likely mixes personal protection (where coverage is low) and community protection (where coverage is high). In areas with low ITN coverage, the only protection is personal. In areas with high coverage (above 50\%), non-users also benefit from community protection. With cross-sectional data, we cannot separate these mechanisms. This is a key limitation.
+
+The DML estimate of 2.8\% is the average effect across all clusters, some with low coverage (personal protection only) and some with high coverage (personal + community protection). If coverage were universal (>80\%) across Kenya, the population-average effect would likely be larger - possibly approaching the conditional effect of 44-61\%.
+
+\subsection{Mechanism of Community Protection}
+
+The community effect operates through several mechanisms:
+
+\begin{enumerate}
+	\item \textbf{Mosquito mortality}: Pyrethroid insecticides kill adult mosquitoes. When enough mosquitoes are killed, the transmission cycle is interrupted.
+	
+	\item \textbf{Reduced mosquito longevity}: Even sub-lethal doses reduce mosquito lifespan. Malaria parasites require 10-14 days to develop within mosquitoes (extrinsic incubation period). If mosquitoes die before completing this period, transmission is interrupted.
+	
+	\item \textbf{Reduced human-mosquito contact}: ITNs provide a physical barrier, reducing the number of successful blood meals. This reduces the pool of infected mosquitoes.
+	
+	\item \textbf{Herd immunity}: When enough individuals are protected, the reproductive number of the parasite falls below 1, leading to transmission interruption.
+\end{enumerate}
+
+\section{Interpretation of Heterogeneous Effects}
+
+\subsection{Wealth Gradient}
+
+ITNs are most effective for the "Poorer" wealth quintile (OR = 0.919, 8.1\% reduction, p = 0.001) but not for the poorest (OR $\approx$ 1.00). This finding has important implications for targeting.
+
+Why are ITNs less effective for the poorest? Several explanations are possible:
+
+\begin{enumerate}
+	\item \textbf{Housing quality}: The poorest households typically have thatched roofs, mud walls, and open eaves - all of which allow mosquitoes to enter regardless of ITN use. A child can sleep under a net but still be bitten by mosquitoes that enter through gaps in walls or eaves.
+	
+	\item \textbf{Overcrowding}: The poorest households have more children per sleeping space. A single ITN may not cover all children. Even if a child is assigned a net, siblings may share, reducing coverage.
+	
+	\item \textbf{Net condition}: The poorest households cannot afford to replace nets when they become torn or lose insecticidal activity. Older nets have holes that allow mosquitoes to enter and reduced insecticide that fails to kill or repel mosquitoes.
+	
+	\item \textbf{Behavioral factors}: The poorest households may have lower health literacy or face competing priorities. ITN use may be inconsistent if nets are needed for other purposes (e.g., fishing in Lake Victoria region).
+\end{enumerate}
+
+The "Poorer" quintile likely has better housing and fewer children per net, allowing ITNs to demonstrate their full protective effect. This suggests that ITN distribution should be targeted to the "Poorer" quintile rather than the "Poorest" unless accompanied by complementary interventions.
+
+\subsection{Age Gradient}
+
+Older children (36-59 months) show the strongest protective effect (OR = 0.963, 3.7\% reduction, p < 0.001). Several explanations are plausible:
+
+\begin{enumerate}
+	\item \textbf{Independent use}: Older children can position nets correctly and stay under them through the night. Infants (0-11 months) are covered by parents but may kick off nets during sleep.
+	
+	\item \textbf{Less caregiver fatigue}: Parents of older children may be less exhausted and more consistent with net hanging.
+	
+	\item \textbf{No maternal antibodies}: The protective effect of maternal antibodies wanes by 6-12 months. Older children have no passive protection, so ITNs provide more detectable benefit.
+	
+	\item \textbf{Higher exposure}: Older children are more mobile and spend more time outdoors, increasing exposure to mosquitoes. ITNs are most beneficial when baseline exposure is high.
+\end{enumerate}
+
+The lack of a significant effect in the 24-35 month age group (OR = 1.005, p = 0.828) is puzzling. This may reflect the transition from caregiver-dependent to independent use during this period, with some children inconsistently covered.
+
+\subsection{Rainfall Gradient}
+
+ITNs are most effective in medium and high rainfall areas (OR = 0.950-0.967, 3.3-5.0\% reduction). This is epidemiologically plausible:
+
+\begin{enumerate}
+	\item \textbf{Higher transmission intensity}: Rainfall creates mosquito breeding sites. More mosquitoes mean more opportunities for ITNs to demonstrate protection.
+	
+	\item \textbf{More detectable effect}: When baseline risk is low, it is harder to detect a protective effect. In low rainfall areas, even effective interventions may appear ineffective due to low statistical power.
+	
+	\item \textbf{Seasonal vs perennial transmission}: In high rainfall areas, transmission is perennial. ITNs provide year-round protection. In low rainfall areas, transmission is seasonal; ITNs hung only during rainy seasons may be forgotten during dry seasons.
+\end{enumerate}
+
+The effect in high rainfall areas (OR = 0.967, p = 0.025) is slightly smaller than in medium rainfall areas (OR = 0.950, p < 0.001). This may reflect the fact that in very high rainfall areas, transmission intensity is so high that even perfect ITN use cannot completely block exposure. The entomological inoculation rate (EIR) in western Kenya can reach 300 infective bites per person per year- more than one per day.
+
+\subsection{Urban-Rural Gradient}
+
+Urban areas show significant protection (OR = 0.974, p = 0.003); rural areas are borderline (OR = 0.976, p = 0.077). This may reflect:
+
+\begin{enumerate}
+	\item \textbf{Housing quality}: Urban homes have solid walls, closed eaves, and screened windows - all reducing mosquito entry. ITNs provide additional protection on top of already-protective housing.
+	
+	\item \textbf{Lower vector density}: Urban areas have fewer mosquito breeding sites (less standing water, better drainage). With fewer mosquitoes, each ITN use has greater proportional impact.
+	
+	\item \textbf{Better net access}: Urban households may have higher ITN ownership and better access to replacement nets.
+	
+	\item \textbf{Health-seeking behavior}: Urban residents may seek treatment sooner, reducing severe outcomes. This could improve detection of ITN effects on mortality.
+\end{enumerate}
+
+The rural estimate (OR = 0.976) is similar in magnitude to the urban estimate (0.974) but has a larger p-value due to wider confidence intervals. The lack of statistical significance in rural areas may reflect lower statistical power rather than a truly smaller effect.
+
+\section{Implications for Malaria Prevention Strategies}
+
+\subsection{Continued Investment in ITN Distribution}
+
+The consistent protective effect across six methods supports continued investment in ITN distribution programs. Despite the decline in ITN use from 58.0\% in 2015 to 50.5\% in 2020, ITNs remain an effective intervention for reducing malaria infection. The DML estimate suggests that ITNs avert approximately 125,000 malaria cases annually among Kenyan children under five.
+
+\subsection{Targeted Distribution Strategies}
+
+The heterogeneous treatment effects suggest that ITN distribution could be targeted to maximize impact. Priority should be given to:
+
+\begin{enumerate}
+	\item \textbf{Poorer households} (not the very poorest, who need complementary interventions)
+	\item \textbf{High-rainfall areas} where transmission risk is highest
+	\item \textbf{Older children} (36-59 months)
+	\item \textbf{Urban areas} which show clear protective effects
+\end{enumerate}
+
+\subsection{Complementary Interventions for the Poorest}
+
+The lack of significant effect in the poorest quintile suggests that ITNs alone may be insufficient for this population. Complementary interventions include:
+
+\begin{enumerate}
+	\item \textbf{Improved housing}: Closing eaves, screening windows, and replacing thatched roofs with metal sheets can reduce mosquito entry by 50-80\%. Studies have shown that housing improvements can reduce malaria risk by 30-50\%.
+	
+	\item \textbf{Indoor residual spraying (IRS)}: IRS with long-lasting insecticides can kill mosquitoes that enter homes, providing protection even when nets are not used optimally.
+	
+	\item \textbf{Larval source management}: Draining standing water and applying larvicides can reduce mosquito populations at the source.
+	
+	\item \textbf{Multiple nets per household}: Providing more nets than the number of sleeping spaces ensures that all children have nets, even if some nets are damaged.
+\end{enumerate}
+
+\subsection{Behavior Change Communication}
+
+The decline in ITN use from 58.0\% to 50.5\% despite continued distribution suggests that distribution alone is insufficient. Programs should invest in behavior change communication to:
+
+\begin{enumerate}
+	\item \textbf{Promote consistent use}: Emphasize that nets must be used every night, not just during rainy seasons.
+	
+	\item \textbf{Teach proper net care}: Nets should be washed correctly (not with detergents that remove insecticide) and dried in the shade.
+	
+	\item \textbf{Encourage replacement}: Nets lose insecticidal activity after 2-3 years. Caregivers need to know when to replace nets.
+	
+	\item \textbf{Address barriers}: For the poorest households, free net distribution may be necessary; for others, subsidized nets may be sufficient.
+\end{enumerate}
+
+\section{Limitations}
+
+\subsection{Unmeasured Confounding}
+
+Despite including a comprehensive set of covariates informed by the DAG, we cannot rule out unmeasured confounders. Key unmeasured factors include:
+
+\begin{enumerate}
+	\item \textbf{Genetic resistance}: G6PD deficiency and sickle cell trait provide substantial protection against severe malaria but are not measured in KMIS.
+	
+	\item \textbf{Net condition}: Net age, number of holes, and insecticide retention are not reported. A child may "use" an ITN that is tattered and offers little protection.
+	
+	\item \textbf{Other preventive measures}: IRS coverage, mosquito repellent use, and housing modifications are not consistently measured.
+	
+	\item \textbf{Health-seeking behavior}: Fever treatment, health facility access, and care-seeking patterns may correlate with both ITN use and malaria outcomes.
+\end{enumerate}
+
+The E-value analysis (E-value = 3.05) suggests that unmeasured confounding would need to be quite strong (RR > 3 with both treatment and outcome) to explain away the effect. The strongest measured confounders (wealth, rainfall) have RRs in the range of 1.5-3.0. Thus, unmeasured confounding would need to be stronger than any measured confounder to eliminate the effect.
+
+\subsection{Community Effects Not Identifiable}
+
+With cross-sectional data, personal and community protection cannot be separated. The DML estimate of 2.8\% reduction likely mixes both mechanisms. To estimate community effects properly, one would need:
+
+\begin{enumerate}
+	\item \textbf{Cluster-randomized trial design}: Some clusters randomized to receive ITNs, others to control. Coverage is manipulated by the investigator.
+	
+	\item \textbf{Measurement of coverage}: The proportion of households using ITNs in each cluster is needed to estimate threshold effects.
+	
+	\item \textbf{Spatial data}: The distance from each household to ITN-using households is needed to estimate spatial spillovers.
+\end{enumerate}
+
+Hawley et al. (2003) had these features. Our study does not. This is a key limitation.
+
+\subsection{Positivity}
+
+Some treated units have PS > 0.95 (3.3\%), some control units have PS < 0.05 (11.3\%), suggesting near-positivity violations. However, all treated units could be matched to control units with PS in the overlap region (0.058-0.940). The IPTW weight distributions showed no extreme weights after truncation at 4.
+
+\subsection{SUTVA Violation}
+
+The SUTVA assumption (no interference) is likely violated. ITN use by one household affects mosquito populations and transmission risk for neighboring households. This means our estimates may be conservative: the true effect of universal ITN coverage may be larger than the individual-level effect estimated here.
+
+\subsection{Cross-Sectional Design}
+
+The cross-sectional nature of the KMIS data means we cannot establish temporal ordering for all covariates. We assume that environmental and socioeconomic characteristics precede ITN use and malaria infection, but reverse causality cannot be completely ruled out.
+
+\subsection{Generalizability}
+
+The findings are specific to Kenya and may not generalize to other malaria-endemic countries with different transmission intensities, mosquito species, or ITN distribution strategies.
+
+\section{Strengths}
+
+Despite these limitations, the study has several strengths:
+
+\begin{enumerate}
+	\item \textbf{Triangulation}: Use of six methods (logistic, GLMM, PSM, IPTW, DR, DML) for triangulation of evidence. The convergence of all methods toward protective effects provides robust evidence.
+	
+	\item \textbf{Clustering}: Explicit accounting for clustering using GLMM and cluster-aware cross-fitting, with ICC = 50-58\% justifying this approach.
+	
+	\item \textbf{GLMM for propensity scores}: Following \citet{ayele2024assessment}, we extended multilevel modeling to propensity score estimation, accounting for clustering in the PS model.
+	
+	\item \textbf{Estimand distinction}: Clear distinction between cluster-specific (conditional) and population-average (marginal) effects.
+	
+	\item \textbf{Environmental data}: Integration of high-resolution environmental data with survey data using a DAG-based approach.
+	
+	\item \textbf{Robustness}: Comprehensive robustness checks across learners, folds, and covariate specifications.
+	
+	\item \textbf{Heterogeneity}: Subgroup analysis to inform targeted interventions.
+	
+	\item \textbf{E-values}: Sensitivity analysis to assess robustness to unmeasured confounding.
+\end{enumerate}

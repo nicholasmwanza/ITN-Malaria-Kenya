@@ -1,0 +1,248 @@
+%-----------------------------------------------------------------------------
+% Template for AIMS-Cameroon essay phase 2015-2016, ver 1, 160416
+%
+% The fonts, linespacing, numbering, page styles, order
+% of Title/Abstract/TOC/Body/{Appendices}/Acknowledgements/References 
+% are prescribed as the AIMS house style.
+%
+% Do not change them or add to it without getting approval first.
+% Essays are not accepted if they do not follow house style.
+% This is in preparation for your Masters/PhD where the university
+% will be much more strict on the house style.
+%
+\documentclass{aimsessay}
+%
+%-----------------------------------------------------------------------------
+% To use external packages for specific needs, 
+% get approval before adding them here (they
+% should not override general AIMS house style and layout).
+%
+% Examples:
+%
+% For tables:
+\usepackage{booktabs} % \toprule, \midrule, \bottomrule
+\usepackage{array}    % \newcolumntype
+
+% 
+% For figures:
+\usepackage[below]{placeins} % use \FloatBarrier in the body
+% \usepackage{float}  %"H" placement spec, for **really here** (i.e. not float)
+% \usepackage{subfig} %many figures in one figure (note subfigure is deprecated)
+\usepackage{sidecap}
+\usepackage{graphicx}
+% For code and algorithms
+\usepackage{moreverb}   % \verbatimtabinput
+% For links and hyper references
+\usepackage{hyperref}
+\urlstyle{same}
+
+\usepackage{fancyhdr} %For header image on title page
+
+% \usepackage{listings} % more flexible and complicated 
+                        % than moreverb and algorithm
+% To include accented French Characters
+%\usepackage[french]{babel}
+%\usepackage{ucs}
+%\usepackage[utf8x]{inputenc} 
+\usepackage[latin1]{inputenc}
+\usepackage{wrapfig}
+\usepackage[numbers]{natbib} 
+% To change the Interface Language
+%Options > Interface Language > choose "en" or "fr"
+% then restart Texmaker.
+% Others
+% \usepackage[all]{xy} 
+% \usepackage{sagetex}
+% \usepackage{siunitx} % to typeset numbers, units, align decimals in tables.
+% \usepackage{dcolumn} % less flexible but maybe faster than siunitx above.
+% \usepackage{mathtools} % More maths, e.g. \mathclap.
+%
+% Others may be landscape, longtable, algorithm, algorithmic, etc.
+% 
+% ----------------------------------------------------------------------------
+% An AIMS Essay can use the sectioning commands "\chapter", "\section",
+% "\subsection". No "\subsubsection", "\paragraph", etc. They are disabled.
+% 
+% For Theorems and such, use the environments defined here:
+% \begin{thm}...\end{thm} (or "lem", "defn", etc)
+% 
+% We put the number to the left of the Theorem heading.
+\swapnumbers 
+% 
+% Theorems are in italics.
+\theoremstyle{plain}
+\newtheorem{thm}[subsection]{Theorem}
+%
+% Rest is not in italics.
+\theoremstyle{definition} 
+\newtheorem{lem}[subsection]{Lemma}
+\newtheorem{cor}[subsection]{Corollary}
+\newtheorem{conj}[subsection]{Conjecture}
+\newtheorem{pro}[subsection]{Proposition}
+\newtheorem{exa}[subsection]{Example}
+\newtheorem{defn}[subsection]{Definition}
+\newtheorem{rem}[subsection]{Remark}
+% 
+% If you have no theorems, but a lot of equations, maybe the
+% following two lines are good. Beware of corresponding Equation
+% and Example numbers though! Number equations by sections.
+% 
+\numberwithin{equation}{section}
+% 
+%-----------------------------------------------------------------------------
+% Abstracts are usually written in English, with a version in your
+% mother tongue underneath.
+%
+% French, Igbo, Malagasy, etc. students use normal latex
+% for special characters, for example \'{e}
+%
+% Amharic students use openoffice to write Amharic,
+% export and include a figure.
+%
+% Arabic students uncomment this line to write your abstract, 
+% and see the example below:
+%\usepackage{arabtex}                         
+%\usepackage{utf8} 
+%\setcode{utf8}    
+% Then in the MAIN BODY use this:                  
+%% \begin{RLtext}    
+%% Here is where the arabic text goes.
+%% You can just type it with an arabic keyboard
+%% \end{RLtext}
+%-----------------------------------------------------------------------------
+% Your own command shortcuts can go here
+% keep them clearly separate from other sections of the preamble
+% It is good style to have only a few of these so that
+% we can read one another's code. If you have to many, 
+% then your code does not compile in someone else's template easily,
+% and it makes it harder to read. These definitions are only
+% meant for very often-used commands to save typing; Examples:
+%
+%\newcommand {\be}{\begin{equation}}
+%\newcommand {\ee}{\end{equation}}
+%\newcommand {\C}{\mathbb{C}} % Complex
+%\newcommand {\Z}{\mathbb{Z}} % Integers
+%\newcommand {\R}{\mathbb{R}} % Real
+%\DeclareMathOperator{\sech}{sech} % declaring new math operators like \sin.
+
+
+%-----------------------------------------------------------------------------
+% Title & Author
+
+\title{\vspace*{-4cm} Estimating the Causal Effect of Insecticide-Treated Net Use on Malaria Infection in Kenya: Comparing Cluster-Specific and Population-Average Effects Using Traditional and Machine Learning Methods}
+\author{Nicholas Mwanza (nicholas.mwanza@aims-cameroon.org)\\
+African Institute for Mathematical Sciences (AIMS)\\
+Cameroon\\\\
+{\small Supervised by: Dr. Haisa Osmanli}\\
+{\small University of Regina, Canada}%
+}
+\date{{\small 30 May 2026}\\%
+  {\scriptsize\it Submitted in Partial Fulfillment of 
+    a Structured Masters Degree at AIMS-Cameroon}
+}
+%-------------------------------------------------------------------------
+\begin{document}
+\pagestyle{empty}
+%The pagestyle 'empty' is used by \maketitle for the 'report' document class. 
+% In order to include a header image on the first page, the pagestyle 'empty' 
+% must be redefined. However, the redefinition should only be local which 
+% is why we group the commands below within braces
+{ 
+\setlength{\headheight}{95pt} %Ensure that the header image fits within the header.
+% Without this line, fancyhdr will increase \headheight to fit the header image. 
+% In addition, the increased \headheight will be used throughout the document.
+% There will thus be a large empty space at the top of every page...
+\fancypagestyle{empty}{%
+  \fancyhf{}% Clear header/footer
+  \renewcommand{\headrulewidth}{0pt} %Remove the horizontal line
+  \fancyhead[C]{\includegraphics[width = \textwidth]{Figures/aimsHeader.png}}% Logo
+} %end \fancypagestyle
+
+\maketitle
+}
+
+% All other files are included via \input. 
+% To compile in texmaker while viewing any of those
+% without having to switch back, use
+%   Options > Define Current Document as 'Master Document'
+% To not have to close a PDF, remove viewpdf from quickbuild 
+% and open the PDF (once) manually: it will auto-refresh or with control-r
+% 
+%-------------------------------------------------------------------------
+% The abstract is the first thing we want to see. No acknowledgements or 
+% dedications here. Fetch the abstract from a separate file.
+% Please write it in English and in your mother tongue.
+% An abstract should be less than half a page, so that both abstracts 
+% (that is both languages) fit onto one page.
+% We number roman numerals until the main body
+\pagenumbering{roman}
+\input{abstract}
+% Don't go typing out the contents.
+\tableofcontents
+% We strongly *discourage* lists of figures, glossaries, and indices 
+% under the AIMS essay style. Get approval before uncommenting this. There
+% has to be a good reason for your essay to be navigable in this form, e.g.
+% an abnormally large number of figures, or a graphically oriented topic
+%\listoffigures
+%\addcontentsline{toc}{chapter}{List of Figures}
+%-----------------------------------------------------------------------------
+\newpage
+% We switch to arabic numerals here where your page count starts
+% Essays must be 25-30 pages long *starting here* and up to and including
+% the conclusion. It does not include the acknowledgements or references.
+% 
+% Figures may differ between topics, but they are not there
+% to fill the pages -- they must add meaning.
+% In general most figures should be 0.8 times the width of the page
+% (perhaps wider when two or three columns of figures)
+% See the example in chapter three for defining that. Be *consistent*
+% in your presentation of information.
+\pagenumbering{arabic}
+\pagestyle{myheadings}
+%-----------------------------------------------------------------------------
+% Each chapter goes in a separate file
+% Chapter titles are just examples
+% Always have a question
+% Note the Case Pattern used at AIMS
+\input{chapter1} % Introduction is usually a chapter itself.
+\input{chapter2}  
+\input{chapter3}
+\input{chapter4} % Conclusion is usually a chapter itself. 
+\input{chapter5}
+\input{chapter6}
+%\input{chapter7}
+%\input{chapter8}
+%\input{chapter9}
+% This is where we stop counting pages.
+% Acknowledgements and References (and appendices) are not counted.
+%-----------------------------------------------------------------------------
+% Uncomment the next four lines if you have an appendix
+% Appendices are usually not counted, and are only allowed if you
+% speak to the Academic Director about the need for it. Get approval first,
+% and use this format. An appendix is not necessary for an
+% essay's completeness.
+\appendix
+\renewcommand*{\theHchapter}{\Alph{chapter}}
+\input{appendixA}
+\endappendix
+%-----------------------------------------------------------------------------
+% See the acknowledgement.tex file and follow the instructions there.
+\input{acknowledgement}
+%-----------------------------------------------------------------------------
+% Note the errata page is not for now, it is for use during the examination.
+% Not that you're going to have any errata.
+%-----------------------------------------------------------------------------
+% THE BIBLIOGRAPHY 
+% Bibliography styles define how the bibliography is listed and formatted.
+% We use the 'plain' bibliography style by default here.  
+% You are encouraged to use it.
+% If your supervisor and tutor confirms that the field 
+% you work in (physics, finance, etc.) generally use another
+% style than plain, then you may change to that style.
+\renewcommand{\bibname}{References}
+%\nocite{*} %Uncomment this line if you want all references in the bib file to appear in the bibliography (i.e. even the non-cited references). This is not advisable and must be approved by the Academic Director.
+\bibliographystyle{plain}
+\bibliography{template-bibliography}
+\addcontentsline{toc}{chapter}{References}
+%-----------------------------------------------------------------------------
+\end{document}

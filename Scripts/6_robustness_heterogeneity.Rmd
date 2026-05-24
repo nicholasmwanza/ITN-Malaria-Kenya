@@ -1,0 +1,470 @@
+---
+title: "Week 6: Robustness and Heterogeneity Analysis"
+author: "Nicholas Mwanza"
+date: "April 2026"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 8)
+```
+
+```{r}
+rm(list = ls())
+setwd("/home/student25/Documents/Projects/Essay/Scripts/")
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(data.table)
+library(DoubleML)
+library(mlr3)
+library(mlr3learners)
+library(ranger)
+library(xgboost)
+library(haven)
+
+output_dir <- "/home/student25/Documents/Projects/Essay/Figures/"
+data_dir <- "/home/student25/Documents/Projects/Essay/Cleaned/"
+if(!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+```
+
+```{r}
+analytical_2015 <- readRDS("/home/student25/Documents/Projects/Essay/Cleaned/analytical_2015.rds")
+analytical_2020 <- readRDS("/home/student25/Documents/Projects/Essay/Cleaned/analytical_2020.rds")
+analytical_combined <- readRDS("/home/student25/Documents/Projects/Essay/Cleaned/analytical_combined.rds")
+
+week5_results <- readRDS(paste0(data_dir, "week5_doubleml_improved_results.rds"))
+
+cat("KMIS 2015:", nrow(analytical_2015), "children\n")
+cat("KMIS 2020:", nrow(analytical_2020), "children\n")
+cat("Combined:", nrow(analytical_combined), "children\n")
+
+cat("\nVariable names in analytical_2015:\n")
+print(names(analytical_2015))
+```
+
+```{r}
+prepare_dml_data_cluster <- function(data, survey_name) {
+  
+  dml_data <- data %>%
+    mutate(
+      malaria_num = as.numeric(malaria),
+      itn_use_num = as.numeric(itn_use),
+      sex_num = ifelse(sex == "Male", 0, 1),
+      residence_num = ifelse(residence == "Urban", 0, 1),
+      wealth_num = as.numeric(wealth)
+    ) %>%
+    select(
+      malaria_num, itn_use_num, cluster,
+      age_months, sex_num, wealth_num, residence_num,
+      rainfall, temp_mean, evi, aridity, wet_days, population
+    ) %>%
+    filter(complete.cases(.))
+  
+  cat(survey_name, ": ", nrow(data), " -> ", nrow(dml_data), " complete cases\n")
+  return(dml_data)
+}
+
+dml_data_2015 <- prepare_dml_data_cluster(analytical_2015, "KMIS 2015")
+dml_data_2020 <- prepare_dml_data_cluster(analytical_2020, "KMIS 2020")
+dml_data_combined <- prepare_dml_data_cluster(analytical_combined, "Combined")
+
+dml_data_combined_rf <- dml_data_combined %>%
+  mutate(cluster_fe = as.factor(cluster)) %>%
+  select(-cluster)
+
+dml_data_2015_rf <- dml_data_2015 %>%
+  mutate(cluster_fe = as.factor(cluster)) %>%
+  select(-cluster)
+
+dml_data_2020_rf <- dml_data_2020 %>%
+  mutate(cluster_fe = as.factor(cluster)) %>%
+  select(-cluster)
+
+dml_data_combined_xgb <- dml_data_combined %>%
+  select(-cluster)
+
+prepare_heterogeneity_data <- function(data) {
+  het_data <- data %>%
+    mutate(
+      malaria_num = as.numeric(malaria),
+      itn_use_num = as.numeric(itn_use),
+      sex_num = ifelse(sex == "Male", 0, 1),
+      wealth_num = as.numeric(wealth),
+      wealth_factor = wealth,  # wealth is already a factor
+      residence_num = ifelse(residence == "Urban", 0, 1),
+      residence_factor = residence  # residence is already a factor
+    ) %>%
+    select(
+      malaria_num, itn_use_num,
+      age_months, sex_num, wealth_num, wealth_factor, 
+      residence_num, residence_factor,
+      rainfall, temp_mean, evi, aridity, wet_days, population
+    ) %>%
+    filter(complete.cases(.))
+  return(het_data)
+}
+
+het_data_combined <- prepare_heterogeneity_data(analytical_combined)
+
+dml_dt_2015_rf <- as.data.table(dml_data_2015_rf)
+dml_dt_2020_rf <- as.data.table(dml_data_2020_rf)
+dml_dt_combined_rf <- as.data.table(dml_data_combined_rf)
+dml_dt_combined_xgb <- as.data.table(dml_data_combined_xgb)
+
+covariates_rf <- c("age_months", "sex_num", "wealth_num", "residence_num",
+                   "rainfall", "temp_mean", "evi", "aridity", "wet_days", "population",
+                   "cluster_fe")
+
+covariates_xgb <- c("age_months", "sex_num", "wealth_num", "residence_num",
+                    "rainfall", "temp_mean", "evi", "aridity", "wet_days", "population")
+
+cat("RF covariates (with cluster):", length(covariates_rf), "\n")
+cat("XGB covariates:", length(covariates_xgb), "\n")
+
+obj_dml_2015_rf <- double_ml_data_from_data_frame(
+  df = dml_dt_2015_rf, y_col = "malaria_num", d_cols = "itn_use_num", x_cols = covariates_rf)
+
+obj_dml_2020_rf <- double_ml_data_from_data_frame(
+  df = dml_dt_2020_rf, y_col = "malaria_num", d_cols = "itn_use_num", x_cols = covariates_rf)
+
+obj_dml_combined_rf <- double_ml_data_from_data_frame(
+  df = dml_dt_combined_rf, y_col = "malaria_num", d_cols = "itn_use_num", x_cols = covariates_rf)
+
+obj_dml_combined_xgb <- double_ml_data_from_data_frame(
+  df = dml_dt_combined_xgb, y_col = "malaria_num", d_cols = "itn_use_num", x_cols = covariates_xgb)
+
+cat("Combined RF:", obj_dml_combined_rf$n_obs, "obs\n")
+cat("Combined XGB:", obj_dml_combined_xgb$n_obs, "obs\n")
+```
+
+```{r}
+learner_rf_base_g <- lrn("regr.ranger", num.trees = 500, min.node.size = 10)
+learner_rf_base_m <- lrn("classif.ranger", num.trees = 500, min.node.size = 10, predict_type = "prob")
+
+learner_rf_tuned_g <- lrn("regr.ranger", num.trees = 1000, min.node.size = 10)
+learner_rf_tuned_m <- lrn("classif.ranger", num.trees = 1000, min.node.size = 10, predict_type = "prob")
+
+learner_rf_small_g <- lrn("regr.ranger", num.trees = 500, min.node.size = 5)
+learner_rf_small_m <- lrn("classif.ranger", num.trees = 500, min.node.size = 5, predict_type = "prob")
+
+learner_gb_g <- lrn("regr.xgboost", nrounds = 100, max_depth = 3, eta = 0.1)
+learner_gb_m <- lrn("classif.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, predict_type = "prob")
+
+learner_gb200_g <- lrn("regr.xgboost", nrounds = 200, max_depth = 3, eta = 0.1)
+learner_gb200_m <- lrn("classif.xgboost", nrounds = 200, max_depth = 3, eta = 0.1, predict_type = "prob")
+```
+
+```{r}
+run_robustness_dml <- function(data_obj, ml_g, ml_m, n_folds, survey_name, learner_name) {
+  dml_irm <- DoubleMLIRM$new(
+    data = data_obj, ml_g = ml_g, ml_m = ml_m,
+    n_folds = n_folds, score = "ATE")
+  dml_irm$fit()
+  
+  data.frame(
+    Survey = survey_name,
+    Learner = learner_name,
+    N_Folds = n_folds,
+    ATE = dml_irm$coef,
+    SE = dml_irm$se,
+    CI_Lower = dml_irm$coef - 1.96 * dml_irm$se,
+    CI_Upper = dml_irm$coef + 1.96 * dml_irm$se,
+    OR = exp(dml_irm$coef),
+    OR_CI_Lower = exp(dml_irm$coef - 1.96 * dml_irm$se),
+    OR_CI_Upper = exp(dml_irm$coef + 1.96 * dml_irm$se),
+    P_Value = dml_irm$pval
+  )
+}
+```
+
+```{r}
+robustness_results <- bind_rows(
+  run_robustness_dml(obj_dml_combined_rf, learner_rf_base_g, learner_rf_base_m, 5, "Combined", "Baseline RF (w/ cluster)"),
+  run_robustness_dml(obj_dml_combined_rf, learner_rf_tuned_g, learner_rf_tuned_m, 5, "Combined", "Tuned RF (w/ cluster)"),
+  run_robustness_dml(obj_dml_combined_rf, learner_rf_small_g, learner_rf_small_m, 5, "Combined", "RF (small node)"),
+  run_robustness_dml(obj_dml_combined_xgb, learner_gb_g, learner_gb_m, 5, "Combined", "XGBoost (100 rounds)"),
+  run_robustness_dml(obj_dml_combined_xgb, learner_gb200_g, learner_gb200_m, 5, "Combined", "XGBoost (200 rounds)")
+)
+
+cat("\nRobustness results (OR scale):\n")
+robustness_results %>%
+  mutate(OR = round(OR, 3), CI = paste0("(", round(OR_CI_Lower, 3), "-", round(OR_CI_Upper, 3), ")")) %>%
+  select(Learner, OR, CI, P_Value) %>% print()
+```
+
+```{r}
+run_heterogeneity_wealth <- function(het_data, survey_name) {
+  results <- data.frame()
+  wealth_levels <- c("Poorest", "Poorer", "Middle", "Richer", "Richest")
+  
+  for(w in wealth_levels) {
+    data_subset <- het_data %>% filter(wealth_factor == w)
+    
+    if(nrow(data_subset) > 200) {
+      dml_subset <- data_subset %>%
+        select(-wealth_factor, -residence_factor) %>%
+        mutate(cluster = 1:n())
+      
+      dml_dt_subset <- as.data.table(dml_subset)
+      covars_subset <- covariates_xgb[covariates_xgb != "wealth_num"]
+      
+      obj_dml_sub <- double_ml_data_from_data_frame(
+        df = dml_dt_subset, y_col = "malaria_num", d_cols = "itn_use_num",
+        x_cols = covars_subset)
+      
+      dml_irm <- DoubleMLIRM$new(
+        data = obj_dml_sub,
+        ml_g = lrn("regr.xgboost", nrounds = 100, max_depth = 3, eta = 0.1),
+        ml_m = lrn("classif.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, predict_type = "prob"),
+        n_folds = 5, score = "ATE")
+      dml_irm$fit()
+      
+      results <- bind_rows(results, data.frame(
+        Survey = survey_name,
+        Subgroup = w,
+        N = nrow(data_subset),
+        OR = exp(dml_irm$coef),
+        CI_Lower = exp(dml_irm$coef - 1.96 * dml_irm$se),
+        CI_Upper = exp(dml_irm$coef + 1.96 * dml_irm$se),
+        P_Value = dml_irm$pval
+      ))
+    }
+  }
+  return(results)
+}
+
+heterogeneity_wealth <- run_heterogeneity_wealth(het_data_combined, "Combined")
+
+cat("\nHeterogeneity by wealth:\n")
+heterogeneity_wealth %>%
+  mutate(OR = round(OR, 3), CI = paste0("(", round(CI_Lower, 3), "-", round(CI_Upper, 3), ")")) %>%
+  select(Subgroup, N, OR, CI, P_Value) %>% print()
+```
+
+```{r}
+run_heterogeneity_residence <- function(het_data, survey_name) {
+  results <- data.frame()
+  
+  for(res in c("Urban", "Rural")) {
+    data_subset <- het_data %>% filter(residence_factor == res)
+    
+    if(nrow(data_subset) > 200) {
+      dml_subset <- data_subset %>%
+        select(-wealth_factor, -residence_factor) %>%
+        mutate(cluster = 1:n())
+      
+      dml_dt_subset <- as.data.table(dml_subset)
+      covars_subset <- covariates_xgb[covariates_xgb != "residence_num"]
+      
+      obj_dml_sub <- double_ml_data_from_data_frame(
+        df = dml_dt_subset, y_col = "malaria_num", d_cols = "itn_use_num",
+        x_cols = covars_subset)
+      
+      dml_irm <- DoubleMLIRM$new(
+        data = obj_dml_sub,
+        ml_g = lrn("regr.xgboost", nrounds = 100, max_depth = 3, eta = 0.1),
+        ml_m = lrn("classif.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, predict_type = "prob"),
+        n_folds = 5, score = "ATE")
+      dml_irm$fit()
+      
+      results <- bind_rows(results, data.frame(
+        Survey = survey_name,
+        Subgroup = res,
+        N = nrow(data_subset),
+        OR = exp(dml_irm$coef),
+        CI_Lower = exp(dml_irm$coef - 1.96 * dml_irm$se),
+        CI_Upper = exp(dml_irm$coef + 1.96 * dml_irm$se),
+        P_Value = dml_irm$pval
+      ))
+    }
+  }
+  return(results)
+}
+
+heterogeneity_residence <- run_heterogeneity_residence(het_data_combined, "Combined")
+
+cat("\nHeterogeneity by residence:\n")
+heterogeneity_residence %>%
+  mutate(OR = round(OR, 3), CI = paste0("(", round(CI_Lower, 3), "-", round(CI_Upper, 3), ")")) %>%
+  select(Subgroup, N, OR, CI, P_Value) %>% print()
+```
+
+```{r}
+run_heterogeneity_age <- function(het_data, survey_name) {
+  results <- data.frame()
+  
+  age_groups <- list(
+    c(0, 12, "0-11 months"),
+    c(12, 24, "12-23 months"),
+    c(24, 36, "24-35 months"),
+    c(36, 60, "36-59 months")
+  )
+  
+  for(ag in age_groups) {
+    data_subset <- het_data %>% filter(age_months >= ag[1] & age_months < ag[2])
+    
+    if(nrow(data_subset) > 200) {
+      dml_subset <- data_subset %>%
+        select(-wealth_factor, -residence_factor) %>%
+        mutate(cluster = 1:n())
+      
+      dml_dt_subset <- as.data.table(dml_subset)
+      
+      obj_dml_sub <- double_ml_data_from_data_frame(
+        df = dml_dt_subset, y_col = "malaria_num", d_cols = "itn_use_num",
+        x_cols = covariates_xgb)
+      
+      dml_irm <- DoubleMLIRM$new(
+        data = obj_dml_sub,
+        ml_g = lrn("regr.xgboost", nrounds = 100, max_depth = 3, eta = 0.1),
+        ml_m = lrn("classif.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, predict_type = "prob"),
+        n_folds = 5, score = "ATE")
+      dml_irm$fit()
+      
+      results <- bind_rows(results, data.frame(
+        Survey = survey_name,
+        Subgroup = ag[3],
+        N = nrow(data_subset),
+        OR = exp(dml_irm$coef),
+        CI_Lower = exp(dml_irm$coef - 1.96 * dml_irm$se),
+        CI_Upper = exp(dml_irm$coef + 1.96 * dml_irm$se),
+        P_Value = dml_irm$pval
+      ))
+    }
+  }
+  return(results)
+}
+
+heterogeneity_age <- run_heterogeneity_age(het_data_combined, "Combined")
+
+cat("\nHeterogeneity by age:\n")
+heterogeneity_age %>%
+  mutate(OR = round(OR, 3), CI = paste0("(", round(CI_Lower, 3), "-", round(CI_Upper, 3), ")")) %>%
+  select(Subgroup, N, OR, CI, P_Value) %>% print()
+```
+
+```{r}
+rainfall_quantiles <- quantile(het_data_combined$rainfall, probs = c(0.33, 0.67), na.rm = TRUE)
+
+het_data_combined_rain <- het_data_combined %>%
+  mutate(
+    rainfall_group = case_when(
+      rainfall <= rainfall_quantiles[1] ~ "Low rainfall",
+      rainfall <= rainfall_quantiles[2] ~ "Medium rainfall",
+      TRUE ~ "High rainfall"
+    )
+  )
+
+run_heterogeneity_rainfall <- function(het_data, survey_name) {
+  results <- data.frame()
+  
+  for(rain_group in c("Low rainfall", "Medium rainfall", "High rainfall")) {
+    data_subset <- het_data %>% filter(rainfall_group == rain_group)
+    
+    if(nrow(data_subset) > 200) {
+      dml_subset <- data_subset %>%
+        select(-wealth_factor, -residence_factor, -rainfall_group) %>%
+        mutate(cluster = 1:n())
+      
+      dml_dt_subset <- as.data.table(dml_subset)
+      covars_subset <- covariates_xgb[covariates_xgb != "rainfall"]
+      
+      obj_dml_sub <- double_ml_data_from_data_frame(
+        df = dml_dt_subset, y_col = "malaria_num", d_cols = "itn_use_num",
+        x_cols = covars_subset)
+      
+      dml_irm <- DoubleMLIRM$new(
+        data = obj_dml_sub,
+        ml_g = lrn("regr.xgboost", nrounds = 100, max_depth = 3, eta = 0.1),
+        ml_m = lrn("classif.xgboost", nrounds = 100, max_depth = 3, eta = 0.1, predict_type = "prob"),
+        n_folds = 5, score = "ATE")
+      dml_irm$fit()
+      
+      results <- bind_rows(results, data.frame(
+        Survey = survey_name,
+        Subgroup = rain_group,
+        N = nrow(data_subset),
+        OR = exp(dml_irm$coef),
+        CI_Lower = exp(dml_irm$coef - 1.96 * dml_irm$se),
+        CI_Upper = exp(dml_irm$coef + 1.96 * dml_irm$se),
+        P_Value = dml_irm$pval
+      ))
+    }
+  }
+  return(results)
+}
+
+heterogeneity_rainfall <- run_heterogeneity_rainfall(het_data_combined_rain, "Combined")
+
+cat("\nHeterogeneity by rainfall:\n")
+heterogeneity_rainfall %>%
+  mutate(OR = round(OR, 3), CI = paste0("(", round(CI_Lower, 3), "-", round(CI_Upper, 3), ")")) %>%
+  select(Subgroup, N, OR, CI, P_Value) %>% print()
+```
+
+```{r}
+all_heterogeneity <- bind_rows(
+  heterogeneity_wealth %>% mutate(Type = "Wealth Quintile"),
+  heterogeneity_residence %>% mutate(Type = "Residence"),
+  heterogeneity_age %>% mutate(Type = "Age Group"),
+  heterogeneity_rainfall %>% mutate(Type = "Rainfall Level")
+)
+
+all_heterogeneity$Subgroup <- factor(all_heterogeneity$Subgroup,
+  levels = c("Poorest", "Poorer", "Middle", "Richer", "Richest",
+             "Urban", "Rural",
+             "0-11 months", "12-23 months", "24-35 months", "36-59 months",
+             "Low rainfall", "Medium rainfall", "High rainfall"))
+
+p_heterogeneity <- ggplot(all_heterogeneity, aes(x = OR, y = Subgroup, color = Type)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "gray50", linewidth = 1) +
+  geom_point(size = 3, position = position_dodge(width = 0.5)) +
+  geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper),
+                 height = 0.2, position = position_dodge(width = 0.5), linewidth = 0.8) +
+  scale_x_log10(breaks = c(0.5, 0.75, 0.9, 1, 1.1, 1.25),
+                labels = c("0.50", "0.75", "0.90", "1.00", "1.10", "1.25")) +
+  labs(title = "Heterogeneous Treatment Effects of ITN Use on Malaria",
+       x = "Odds Ratio (log scale)", y = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set2")
+
+print(p_heterogeneity)
+ggsave(paste0(output_dir, "week6_heterogeneity_forest.png"),
+       p_heterogeneity, width = 10, height = 8, dpi = 300)
+```
+
+```{r}
+robustness_plot_data <- robustness_results %>%
+  mutate(Learner = factor(Learner, levels = c(
+    "Baseline RF (w/ cluster)",
+    "Tuned RF (w/ cluster)",
+    "RF (small node)",
+    "XGBoost (100 rounds)",
+    "XGBoost (200 rounds)"
+  )))
+
+p_robustness <- ggplot(robustness_plot_data, aes(x = OR, y = Learner)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "gray50", linewidth = 1) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbarh(aes(xmin = OR_CI_Lower, xmax = OR_CI_Upper),
+                 height = 0.2, color = "steelblue", linewidth = 0.8) +
+  scale_x_log10(breaks = c(0.92, 0.94, 0.96, 0.98, 1.00),
+                labels = c("0.92", "0.94", "0.96", "0.98", "1.00")) +
+  labs(title = "Robustness of DML Estimates to Different Learners",
+       x = "Odds Ratio (log scale)", y = "") +
+  theme_minimal()
+
+print(p_robustness)
+ggsave(paste0(output_dir, "week6_robustness_comparison.png"),
+       p_robustness, width = 8, height = 5, dpi = 300)
+```
+
+```{r}
+saveRDS(robustness_results, paste0(data_dir, "week6_robustness_results_improved.rds"))
+saveRDS(all_heterogeneity, paste0(data_dir, "week6_heterogeneity_results_improved.rds"))
+
+cat("\nWeek 6 complete.\n")
+```
