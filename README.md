@@ -1,16 +1,3 @@
-# ITN Use and Malaria in Kenya
-
-**Author:** Nicholas Mwanza  
-**Institution:** AIMS Cameroon  
-**Date:** April 2026  
-
-## Overview
-
-This project estimates the causal effect of Insecticide-Treated Net (ITN) use on malaria infection among children under five in Kenya using data from the 2015 and 2020 Kenya Malaria Indicator Surveys (KMIS).
-
-## Methods
-
-Six aasociation and causal inference methods are implemented:
 # Estimating the Causal Effect of ITN Use on Malaria Infection Among Children Under Five in Kenya
 
 **Author:** Nicholas Mwanza  
