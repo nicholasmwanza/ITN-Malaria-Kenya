@@ -3,7 +3,7 @@
 **Author:** Nicholas Mwanza  
 **Supervisor:** Dr. Haisa Osmanli  
 **Institution:** African Institute for Mathematical Sciences (AIMS) Cameroon  
-**Date:** April 2026  
+**Date:** April-June 2026  
 
 ---
 
