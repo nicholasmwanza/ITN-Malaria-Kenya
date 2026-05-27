@@ -60,7 +60,7 @@ After merging and complete-case analysis:
 
 **Covariates - Household:** electricity, improved_water, improved_sanitation
 
-**Covariates - Environmental:** rainfall (mm), temp_mean (degrees Celsius), evi (Enhanced Vegetation Index), aridity, wet_days, population density
+**Covariates - Environmental:** rainfall (mm), temp_mean (degrees Celsius), evi (Enhanced Vegetation Index), aridity, wet_days, population density.
 
 ---
 
